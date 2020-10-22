@@ -6,6 +6,8 @@ services:
     volumes:
       - .:/data/app/
       - ./docker/php-fpm/php.ini:/usr/local/etc/php/php.ini
+    environment:
+      - COMPOSER_MEMORY_LIMIT=-1
     depends_on:
       - mysql
       - redis
