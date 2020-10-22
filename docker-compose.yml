@@ -1,4 +1,5 @@
 version: '2'
+
 services:
   php:
     build: ./docker/php-fpm
@@ -7,6 +8,7 @@ services:
       - ./docker/php-fpm/php.ini:/usr/local/etc/php/php.ini
     depends_on:
       - mysql
+      - redis
   web:
     image: nginx:latest
     ports:
@@ -17,7 +19,7 @@ services:
     depends_on:
       - php
     env_file:
-      - .env.local
+      - .env
   mysql:
     image: mysql:5.6
     command:
@@ -26,5 +28,13 @@ services:
       - "3306:3306"
     volumes:
       - mysql:/var/lib/mysql
+  redis:
+    image: redis
+    command: ["sh", "-c", "exec redis-server --requirepass \"${REDIS_PASSWORD}\""]
+    ports:
+      - '6379'
+    volumes:
+      - ../data/redis:/data
+
 volumes:
   mysql:

@@ -5,9 +5,15 @@ RUN apk update \
     libxml2-dev freetype-dev libpng-dev libjpeg-turbo-dev g++ make autoconf \
     && docker-php-source extract \
     && docker-php-source delete \
-    && docker-php-ext-install pdo_mysql soap intl zip \
+    && docker-php-ext-install pdo_mysql soap intl \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && rm -rf /tmp/*
+    && rm -rf /tmp/* \
+    && docker-php-source extract \
+    && curl -L -o /tmp/redis.tar.gz https://github.com/phpredis/phpredis/archive/3.0.0.tar.gz \
+    && tar xfz /tmp/redis.tar.gz \
+    && rm -r /tmp/redis.tar.gz \
+    && mv phpredis-3.0.0 /usr/src/php/ext/redis \
+    && docker-php-ext-install redis
 
 CMD ["php-fpm", "-F"]
 
