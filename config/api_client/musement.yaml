@@ -1,0 +1,4 @@
+musement_cities_get:
+  path: cities.json
+  method: GET
+  mapped_class: App\Entity\City[]

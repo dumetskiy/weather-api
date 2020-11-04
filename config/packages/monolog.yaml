@@ -1,0 +1,25 @@
+monolog:
+    handlers:
+        global:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+            channels: [ "!event" ]
+        global.error:
+            type: stream
+            path: "%kernel.logs_dir%/error.%kernel.environment%.log"
+            level: error
+            channels: [ "!event" ]
+        guzzle.musement:
+            type: stream
+            path: "%kernel.logs_dir%/guzzle/musement.%kernel.environment%.log"
+            level: debug
+            channels: [ musement ]
+        guzzle.weather_api:
+            type: stream
+            path: "%kernel.logs_dir%/guzzle/weather_api.%kernel.environment%.log"
+            level: debug
+            channels: [ weather_api ]
+
+    channels: [ musement, weather_api ]
+

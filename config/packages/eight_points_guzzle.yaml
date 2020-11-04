@@ -1,0 +1,16 @@
+parameters:
+    env(MUSEMENT_API_BASE_URL): ''
+    eight_points_guzzle.symfony_log_formatter.pattern: XXXXX {method} {uri} {code}
+    eight_points_guzzle.middleware.symfony_log.class: App\ApiClient\Guzzle\Middleware\ApiClientLogMiddleware
+eight_points_guzzle:
+    logging: true
+    slow_response_time: 1000
+    clients:
+        musement_api:
+            class: App\ApiClient\MusementApiClient
+            base_url: '%env(string:MUSEMENT_API_BASE_URL)%'
+            options:
+                timeout: 30
+                http_errors: false
+                headers:
+                    Accept: 'application/json'

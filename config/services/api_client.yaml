@@ -1,0 +1,3 @@
+services:
+  App\ApiClient\Guzzle\Middleware\ApiClientLogMiddleware:
+    $logger: '@logger.musement'

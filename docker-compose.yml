@@ -9,7 +9,7 @@ services:
     environment:
       - COMPOSER_MEMORY_LIMIT=-1
     depends_on:
-      - mysql
+      - db
       - redis
   web:
     image: nginx:latest
@@ -22,21 +22,24 @@ services:
       - php
     env_file:
       - .env
-  mysql:
-    image: mysql:5.6
-    command:
-      --sql_mode=""
+  db:
+    image: postgres:9.6.1
+    restart: always
+    env_file:
+      - .env
     ports:
-      - "3306:3306"
+      - "5433:5432"
     volumes:
-      - mysql:/var/lib/mysql
+      - db:/var/lib/db
   redis:
     image: redis
     command: ["sh", "-c", "exec redis-server --requirepass \"${REDIS_PASSWORD}\""]
     ports:
-      - '6379'
+      - 6379
+    expose:
+      - 6379
     volumes:
       - ../data/redis:/data
 
 volumes:
-  mysql:
+  db:
