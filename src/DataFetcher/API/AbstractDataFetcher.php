@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\DataFetcher;
+namespace App\DataFetcher\API;
 
 use App\ApiClient\AbstractApiClient;
 use App\ApiClient\RequestConfiguration\AbstractRequestConfigurationProvider;
+use App\DataFormatter\Reponse\ResponseDataFormatterFactory;
 use App\Exception\ApiClient\ApiClientRequestErrorException;
 use App\Serializer\ObjectSerializer;
 
@@ -17,14 +18,19 @@ abstract class AbstractDataFetcher
 
     protected ObjectSerializer $serializer;
 
+    protected ResponseDataFormatterFactory $responseFormatterFactory;
+
     public function __construct(
         AbstractApiClient $apiClient,
         AbstractRequestConfigurationProvider $requestConfigurationProvider,
-        ObjectSerializer $serializer
+        ObjectSerializer $serializer,
+        ResponseDataFormatterFactory $responseFormatterFactory
     ){
         $this->apiClient = $apiClient;
         $this->requestConfigurationProvider = $requestConfigurationProvider;
         $this->serializer = $serializer;
+        $this->serializer = $serializer;
+        $this->responseFormatterFactory = $responseFormatterFactory;
     }
 
     /**
@@ -38,6 +44,15 @@ abstract class AbstractDataFetcher
 
         if (!$responseContent) {
             return null;
+        }
+
+        $responseFormatterName = $requestConfiguration->getResponseFormatterName();
+
+        if ($responseFormatterName) {
+            $responseContent = $this->serializer->deserialize($responseContent, 'array', $requestConfiguration->getFormat());
+            $this->responseFormatterFactory
+                ->getResponseDataFormatter($responseFormatterName)
+                ->formatData($responseContent);
         }
 
         return $this->serializer->deserialize(

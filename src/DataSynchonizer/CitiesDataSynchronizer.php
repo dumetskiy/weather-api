@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\DataSynchonizer;
 
-use App\DataFetcher\MusementDataFetcher;
+use App\DataFetcher\API\MusementDataFetcher;
 use App\DataSynchonizer\DataAnalyzer\CitiesDataAnalyzer;
-use App\Entity\City;
 use App\Exception\ApiClient\ApiClientRequestErrorException;
 use App\Exception\Console\ConsoleRuntimeException;
+use App\Manager\Entity\CityManager;
 use App\OutputManager\Provider\DependencyInjection\OutputManagerProviderAwareInterface;
 use App\OutputManager\Provider\DependencyInjection\OutputManagerProviderTrait;
-use Doctrine\ORM\EntityManagerInterface;
 
 class CitiesDataSynchronizer implements OutputManagerProviderAwareInterface
 {
@@ -21,16 +20,16 @@ class CitiesDataSynchronizer implements OutputManagerProviderAwareInterface
 
     private CitiesDataAnalyzer $citiesDataAnalyzer;
 
-    private EntityManagerInterface $entityManager;
+    private CityManager $cityManager;
 
     public function __construct(
         MusementDataFetcher $musementDataFetcher,
         CitiesDataAnalyzer $citiesDataAnalyzer,
-        EntityManagerInterface $entityManager
+        CityManager $cityManager
     ) {
         $this->musementDataFetcher = $musementDataFetcher;
         $this->citiesDataAnalyzer = $citiesDataAnalyzer;
-        $this->entityManager = $entityManager;
+        $this->cityManager = $cityManager;
     }
 
     /**
@@ -45,7 +44,6 @@ class CitiesDataSynchronizer implements OutputManagerProviderAwareInterface
 
             $this->outputInformation('Starting cities synchronisation...');
             $this->outputInformation('Fetching Musement cities from the API...');
-
             $musementApiCities = $this->musementDataFetcher->getCitiesData();
 
             if (!$musementApiCities) {
@@ -55,17 +53,13 @@ class CitiesDataSynchronizer implements OutputManagerProviderAwareInterface
             }
 
             $this->outputSuccess(sprintf('Fetched %d cities.', count($musementApiCities)));
-
             $this->outputInformation('Fetching currently saved cities...');
-            $existingCities = $this->entityManager->getRepository(City::class)->findAll();
+            $existingCities = $this->cityManager->fetchAll();
             $this->outputSuccess(sprintf('Fetched %d cities.', count($existingCities)));
-
             $this->outputInformation('Analyzing fetched cities...');
-
             $newCities = $this->citiesDataAnalyzer->getNewlyCreatedCities($existingCities, $musementApiCities);
             $removedCities = $this->citiesDataAnalyzer->getRecentlyRemovedCities($existingCities, $musementApiCities);
             $unchangedCities = $this->citiesDataAnalyzer->getUnchangedCities($existingCities, $musementApiCities);
-
             $this->outputSuccess(sprintf(
                 'Result: %d new, %d removed, %d unchanged cities found',
                 count($newCities),
@@ -78,16 +72,9 @@ class CitiesDataSynchronizer implements OutputManagerProviderAwareInterface
             }
 
             $this->outputInformation('Applying DB changes...');
-
-            foreach ($newCities as $newCity) {
-                $this->entityManager->persist($newCity);
-            }
-
-            foreach ($removedCities as $removedCity) {
-                $this->entityManager->remove($removedCity);
-            }
-
-            $this->entityManager->flush();
+            $this->cityManager->createCities($newCities);
+            $this->cityManager->removeCities($removedCities);
+            $this->cityManager->applyDBChanges();
             $this->outputSuccess('DB changes successfully applied.');
         } catch (ApiClientRequestErrorException $exception) {
             $this->outputError($exception->getMessage());

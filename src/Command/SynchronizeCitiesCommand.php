@@ -58,8 +58,7 @@ class SynchronizeCitiesCommand extends Command
                 )
             );
 
-            $applyDatabaseChanges = false !== $input->getOption(self::OPTION_FORCE);
-            $this->citiesDataSynchronizer->synchronizeCities($applyDatabaseChanges);
+            $this->citiesDataSynchronizer->synchronizeCities(false !== $input->getOption(self::OPTION_FORCE));
 
             return self::SUCCESS;
         } catch (ConsoleRuntimeException $exception) {

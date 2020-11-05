@@ -1,5 +1,7 @@
 parameters:
     env(MUSEMENT_API_BASE_URL): ''
+    env(WEATHER_API_BASE_URL): ''
+    env(WEATHER_API_AUTH_KEY): ''
     eight_points_guzzle.symfony_log_formatter.pattern: XXXXX {method} {uri} {code}
     eight_points_guzzle.middleware.symfony_log.class: App\ApiClient\Guzzle\Middleware\ApiClientLogMiddleware
 eight_points_guzzle:
@@ -12,5 +14,15 @@ eight_points_guzzle:
             options:
                 timeout: 30
                 http_errors: false
+                headers:
+                    Accept: 'application/json'
+        weather_api:
+            class: App\ApiClient\WeatherApiClient
+            base_url: '%env(string:WEATHER_API_BASE_URL)%'
+            options:
+                timeout: 30
+                http_errors: false
+                query:
+                    key: '%env(string:WEATHER_API_AUTH_KEY)%'
                 headers:
                     Accept: 'application/json'

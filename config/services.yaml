@@ -1,7 +1,5 @@
 imports:
-    - { resource: services/api_client.yaml }
-
-parameters:
+    - { resource: services/redis.yaml }
 
 services:
     _defaults:
@@ -19,4 +17,9 @@ services:
     App\Controller\:
         resource: '../src/Controller/'
         tags: ['controller.service_arguments']
+
+
+    App\Manager\Redis\RedisDataManager:
+        arguments:
+            $defaultTTL: '%env(REDIS_DEFAULT_TTL)%'
 

@@ -1,0 +1,5 @@
+weather_for_coordinates:
+  path: forecast.json
+  method: GET
+  mapped_class: App\Entity\Forecast[]
+  response_formatter: weather_api_forecast

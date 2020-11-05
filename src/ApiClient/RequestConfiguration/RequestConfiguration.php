@@ -14,6 +14,8 @@ class RequestConfiguration
 
     private string $mappedClass;
 
+    private ?string $responseFormatterName = null;
+
     private string $format = self::FORMAT_JSON;
 
     public function getMethod(): string
@@ -54,5 +56,15 @@ class RequestConfiguration
     public function setFormat(string $format): void
     {
         $this->format = $format;
+    }
+
+    public function getResponseFormatterName(): ?string
+    {
+        return $this->responseFormatterName;
+    }
+
+    public function setResponseFormatterHandle(?string $responseFormatterName): void
+    {
+        $this->responseFormatterName = $responseFormatterName;
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\City;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Manager\Entity\CityManager;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,13 +18,13 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class CityController extends BaseController
 {
-    private EntityManagerInterface $entityManager;
+    private CityManager $cityManager;
 
-    public function __construct(SerializerInterface $serializer,EntityManagerInterface $entityManager)
+    public function __construct(SerializerInterface $serializer, CityManager $cityManager)
     {
         parent::__construct($serializer);
 
-        $this->entityManager = $entityManager;
+        $this->cityManager = $cityManager;
     }
 
     /**
@@ -38,7 +38,7 @@ class CityController extends BaseController
      */
     public function listAll()
     {
-        return $this->getJsonResponse($this->entityManager->getRepository(City::class)->findAll());
+        return $this->getJsonResponse($this->cityManager->fetchAll());
     }
 
     /**

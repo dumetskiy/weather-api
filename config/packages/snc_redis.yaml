@@ -1,0 +1,6 @@
+snc_redis:
+    clients:
+        default:
+            type: phpredis
+            dsn: "%env(REDIS_DSN)%"
+            logging: '%kernel.debug%'

@@ -24,7 +24,7 @@ class ObjectSerializer extends Serializer
         $normalizers = [
             new ObjectNormalizer($classMetadataFactory, $metadataAwareNameConverter),
             new GetSetMethodNormalizer(),
-            new ArrayDenormalizer()
+            new ArrayDenormalizer(),
         ];
 
         parent::__construct($normalizers, $encoders);

@@ -1,0 +1,10 @@
+parameters:
+  redis_default_ttl: env(REDIS_DEFAULT_TTL);
+
+services:
+  App\Manager\Redis\RedisDataManager:
+    arguments:
+      $defaultTTL: '%redis_default_ttl%'
+
+  Snc\RedisBundle\Client\Phpredis\Client:
+    alias: snc_redis.default
