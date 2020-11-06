@@ -1,5 +1,5 @@
-weather_for_coordinates:
+weather_for_coordinates_get:
   path: forecast.json
   method: GET
-  mapped_class: App\Entity\Forecast[]
-  response_formatter: weather_api_forecast
+  mapped_class: App\DTO\DayWeatherDTO[]
+  response_formatter_handle: weather_api_forecast

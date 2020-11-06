@@ -6,6 +6,10 @@ services:
         autowire: true
         autoconfigure: true
 
+    _instanceof:
+        App\DataFormatter\Reponse\Formatter\AbstractResponseDataFormatter:
+            tags: [ 'app.response_data_formatter' ]
+
     App\:
         resource: '../src/'
         exclude:

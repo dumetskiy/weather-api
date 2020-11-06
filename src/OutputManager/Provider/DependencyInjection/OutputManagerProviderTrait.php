@@ -8,7 +8,7 @@ use App\OutputManager\Provider\OutputManagerProvider;
 
 trait OutputManagerProviderTrait
 {
-    private OutputManagerProvider $outputManagerProvider;
+    private ?OutputManagerProvider $outputManagerProvider = null;
 
     public function setOutputManagerProvider(OutputManagerProvider $outputManagerProvider): void
     {

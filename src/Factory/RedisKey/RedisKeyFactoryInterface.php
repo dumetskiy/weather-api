@@ -9,4 +9,6 @@ use App\ValueObject\AbstractRedisKey;
 interface RedisKeyFactoryInterface
 {
     public function createRedisKey(string $identifier, string $subIdentifier): AbstractRedisKey;
+
+    public function restoreRedisKey(string $redisKey): AbstractRedisKey;
 }

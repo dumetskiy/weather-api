@@ -9,6 +9,7 @@ use App\Exception\ApiClient\ApiClientRequestErrorException;
 use App\Validator\StatusCode\HttpStatusCodeValidator;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Promise\PromiseInterface;
 
 class AbstractApiClient extends GuzzleClient
 {
@@ -21,7 +22,7 @@ class AbstractApiClient extends GuzzleClient
             $response = $this->request(
                 $requestConfiguration->getMethod(),
                 $requestConfiguration->getPath(),
-                $requestOptions
+                array_merge_recursive($this->getConfig(), $requestOptions)
             );
 
             if (HttpStatusCodeValidator::isErrorStatusCode($response->getStatusCode())) {
@@ -29,6 +30,22 @@ class AbstractApiClient extends GuzzleClient
             }
 
             return $response->getBody()->getContents();
+        } catch (GuzzleException $exception) {
+            throw new ApiClientRequestErrorException();
+        }
+    }
+
+    /**
+     * @throws ApiClientRequestErrorException
+     */
+    public function callApiAsync(RequestConfiguration $requestConfiguration, $requestOptions = []): PromiseInterface
+    {
+        try {
+            return $this->requestAsync(
+                $requestConfiguration->getMethod(),
+                $requestConfiguration->getPath(),
+                array_merge_recursive($this->getConfig(), $requestOptions)
+            );
         } catch (GuzzleException $exception) {
             throw new ApiClientRequestErrorException();
         }

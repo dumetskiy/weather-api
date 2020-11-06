@@ -6,5 +6,5 @@ namespace App\ValueObject;
 
 class ForecastRecordRedisKey extends AbstractRedisKey
 {
-    protected const ENTITY_KEY = '';
+    protected const ENTITY_KEY = 'forecast';
 }

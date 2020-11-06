@@ -1,0 +1,5 @@
+{% extends '/weather_forecast/forecast.twig' %}
+
+{% block city_forecast %}
+    <p>City {{ city.getName() }} | {{ todays_weather.getCondition() }} - {{ tomorrow_weather.getCondition() }}</p>
+{% endblock %}

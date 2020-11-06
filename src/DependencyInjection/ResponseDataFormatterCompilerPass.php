@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\DependencyInjection;
 
 use App\DataFormatter\Reponse\ResponseDataFormatterFactory;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-class ResponseDataFormatterCompilerPass
+class ResponseDataFormatterCompilerPass implements CompilerPassInterface
 {
     private const RESPONSE_FORMATTER_SERVICE_TAG = 'app.response_data_formatter';
 

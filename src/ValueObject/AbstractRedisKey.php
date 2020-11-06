@@ -18,6 +18,13 @@ abstract class AbstractRedisKey
         $this->subIdentifier = $subIdentifier;
     }
 
+    public function restoreRedisKey(string $key): self
+    {
+        $keyElements = explode(':', $key);
+
+        return count($keyElements) === 2 ? new static($keyElements[1]) : new static($keyElements[1], $keyElements[2]);
+    }
+
     public function getEntityIdentifier(): string
     {
         return $this->entityIdentifier;

@@ -3,7 +3,7 @@ parameters:
     env(WEATHER_API_BASE_URL): ''
     env(WEATHER_API_AUTH_KEY): ''
     eight_points_guzzle.symfony_log_formatter.pattern: XXXXX {method} {uri} {code}
-    eight_points_guzzle.middleware.symfony_log.class: App\ApiClient\Guzzle\Middleware\ApiClientLogMiddleware
+    eight_points_guzzle.http_client.class: App\DependencyInjection\GuzzleClientDecorated
 eight_points_guzzle:
     logging: true
     slow_response_time: 1000

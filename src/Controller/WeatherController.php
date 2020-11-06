@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\DataFetcher\API\WeatherDataFetcher;
 use App\DataProvider\ForecastDataProvider;
+use App\DataRenderer\WeatherForecastRenderer;
 use App\Entity\City;
 use App\Manager\Entity\CityManager;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -20,33 +20,34 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class WeatherController extends BaseController
 {
-    private CityManager $cityManager;
-
     private ForecastDataProvider $forecastDataProvider;
 
-    public function __construct(SerializerInterface $serializer, CityManager $cityManager, ForecastDataProvider $forecastDataProvider)
-    {
+    private WeatherForecastRenderer $forecastRenderer;
+
+    public function __construct(
+        SerializerInterface $serializer,
+        ForecastDataProvider $forecastDataProvider,
+        WeatherForecastRenderer $forecastRenderer
+    ) {
         parent::__construct($serializer);
 
-        $this->cityManager = $cityManager;
         $this->forecastDataProvider = $forecastDataProvider;
+        $this->forecastRenderer = $forecastRenderer;
     }
 
     /**
-     * @Route("/list", methods={Request::METHOD_GET})
+     * @Route("/forecast", methods={Request::METHOD_GET})
      *
      * @SWG\Response(
      *     response=Response::HTTP_OK,
-     *     description="Returns cities currently stored in the database.",
+     *     description="Returns weather forecast information for given cities",
      *     @Model(type=City::class)
      * )
      */
     public function listAll()
     {
-        $this->forecastDataProvider->getForecast(2);
+        $forecastData = $this->forecastDataProvider->getForecast();
 
-        return $this->getJsonResponse([]);
+        return new Response($this->forecastRenderer->render($forecastData, WeatherForecastRenderer::TEMPLATE_HTML));
     }
-
-
 }

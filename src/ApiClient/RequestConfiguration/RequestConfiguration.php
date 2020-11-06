@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\ApiClient\RequestConfiguration;
 
+use Symfony\Component\Serializer\Annotation\SerializedName;
+
 class RequestConfiguration
 {
     private const FORMAT_JSON = 'json';
@@ -14,7 +16,7 @@ class RequestConfiguration
 
     private string $mappedClass;
 
-    private ?string $responseFormatterName = null;
+    private ?string $responseFormatterHandle = null;
 
     private string $format = self::FORMAT_JSON;
 
@@ -58,13 +60,13 @@ class RequestConfiguration
         $this->format = $format;
     }
 
-    public function getResponseFormatterName(): ?string
+    public function getResponseFormatterHandle(): ?string
     {
-        return $this->responseFormatterName;
+        return $this->responseFormatterHandle;
     }
 
-    public function setResponseFormatterHandle(?string $responseFormatterName): void
+    public function setResponseFormatterHandle(?string $responseFormatterHandle): void
     {
-        $this->responseFormatterName = $responseFormatterName;
+        $this->responseFormatterHandle = $responseFormatterHandle;
     }
 }

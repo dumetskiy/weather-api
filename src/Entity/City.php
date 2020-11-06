@@ -55,6 +55,22 @@ class City
     private string $cityCode;
 
     /**
+     * @ORM\Column(name="time_zone", type="string", length=50)
+     *
+     * @Assert\NotNull()
+     * @Assert\Length(
+     *      max = 50,
+     *      maxMessage = "Timezone is limited to {{ limit }} characters",
+     *      allowEmptyString = false
+     * )
+     *
+     * @SerializedName("time_zone")
+     *
+     * @SWG\Property(description="City handle")
+     */
+    private string $timeZone;
+
+    /**
      * @ORM\Column(name="name", type="string", length=50)
      *
      * @Assert\NotNull()
@@ -146,5 +162,15 @@ class City
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    public function getTimeZone(): string
+    {
+        return $this->timeZone;
+    }
+
+    public function setTimeZone(string $timeZone): void
+    {
+        $this->timeZone = $timeZone;
     }
 }

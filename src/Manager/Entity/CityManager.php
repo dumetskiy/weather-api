@@ -21,6 +21,13 @@ class CityManager
         return $this->entityManager->getRepository(City::class)->findAll();
     }
 
+    public function findByCode(string $code): City
+    {
+        return $this->entityManager->getRepository(City::class)->findOneBy([
+            'cityCode' => $code,
+        ]);
+    }
+
     public function removeCities(array $cities): void
     {
         foreach ($cities as $city) {

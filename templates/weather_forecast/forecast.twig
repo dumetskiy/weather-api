@@ -1,0 +1,8 @@
+{% for cityForecast in forecast.getCitiesForecast() %}
+    {% set city = cityForecast.getCity() %}
+    {% set current_city_datetime = getCityCurrentDateTime(city) %}
+    {% set todays_weather = cityForecast.getDayWeather(getFormattedDate(current_city_datetime)) %}
+    {% set tomorrow_weather = cityForecast.getDayWeather(getFormattedDate(current_city_datetime|date_modify("+1 day"))) %}
+
+    {% block city_forecast %}{% endblock %}
+{% endfor %}

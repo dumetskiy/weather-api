@@ -12,7 +12,7 @@ abstract class AbstractRedisKeyFactory implements RedisKeyFactoryInterface
 
         foreach ($identifiers as $identifier) {
             foreach ($subIdentifiers as $subIdentifier) {
-                $keyCombinations[]= $this->createRedisKey($identifier, $subIdentifier);
+                $keyCombinations[] = $this->createRedisKey($identifier, $subIdentifier);
             }
         }
 

@@ -13,4 +13,9 @@ class ForecastRedisKeyFactory extends AbstractRedisKeyFactory implements RedisKe
     {
         return new ForecastRecordRedisKey($identifier, $subIdentifier);
     }
+
+    public function restoreRedisKey(string $redisKey): AbstractRedisKey
+    {
+        return ForecastRecordRedisKey::restoreRedisKey($redisKey);
+    }
 }
